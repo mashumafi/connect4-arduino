@@ -2,7 +2,8 @@ enum Color
 {
     NONE,
     RED,
-    BLACK
+    BLACK,
+    BOTH
 };
 
 class Piece
@@ -42,6 +43,7 @@ private:
     Color color;
 };
 
-const Piece None{NONE};
+const Piece Empty{NONE};
 const Piece Red{RED};
 const Piece Black{BLACK};
+const Piece Draw{BOTH};
