@@ -1,3 +1,6 @@
+#ifndef CONNECT4_BOARD
+#define CONNECT4_BOARD
+
 #include "piece.h"
 
 #include <Arduino.h>
@@ -11,7 +14,7 @@ public:
         {
             for (int y = 0; y < height; y++)
             {
-                board[x][y] = None;
+                board[x][y] = Empty;
             }
         }
     }
@@ -26,7 +29,7 @@ public:
         if (selection > 0)
         {
             int slot = selection - 1;
-            if (board[slot][0] != None)
+            if (board[slot][0] != Empty)
             {
                 Serial.println("Column full.");
                 return;
@@ -34,7 +37,7 @@ public:
             int y = 1;
             for (; y < height; y++)
             {
-                if (board[slot][y] != None)
+                if (board[slot][y] != Empty)
                 {
                     break;
                 }
@@ -112,9 +115,9 @@ public:
     // get the row the peice will fall into
     int getDropHeight(int column) {
         if(column > width)
-            return Empty;
+            return -1;
         for(int y = 0 ; y < height; y++) {
-            if(input[column][y] == Empty) {
+            if(board[column][y] == Empty) {
                 return y;
             }
         }
@@ -139,8 +142,8 @@ public:
                 float temp = -(100*NegaMax(1));
                 if(PlayOut != 0)
                     temp -= ((100*EVA)/PlayOut);
-                if(-temp >= 100)
-                    provocation = true;
+                //if(-temp >= 100)
+                    //provocation = true;
                 if(chance[0] > temp) {
                     chance[0] = temp;
                     chance[1] = column;
@@ -157,11 +160,11 @@ public:
         int chance=0;
         if(Depth % 2 != 0)
             RB = Red;
-        for(int column = 0; column < width; column++) {
+        for(int column = 0; column < width; column++)
             PlayNumber[column] = getDropHeight(column);
         for(int column = 0; column < width; column++) {
             if(PlayNumber[column] != -1) {
-                input[PlayNumber[column]] = RB;
+                board[column][PlayNumber[column]] = RB;
                 if(getWinner() != Empty) {
                     PlayOut++;
                     if(RB == Black)
@@ -205,3 +208,5 @@ private:
     static const int height = 6;
     Piece board[width][height];
 };
+
+#endif
