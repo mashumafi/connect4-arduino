@@ -1,5 +1,5 @@
 {
     "board": "arduino:avr:uno",
-    "sketch": "alarm-clock.ino",
+    "sketch": "connect4.ino",
     "port": "COM6"
 }

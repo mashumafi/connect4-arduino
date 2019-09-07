@@ -143,7 +143,7 @@ public:
                     provocation = true;
                 if(chance[0] > temp) {
                     chance[0] = temp;
-                    chance[1] = PlayNumber;
+                    chance[1] = column;
                 }
                 board[column][PlayNumber] = Empty;
             }

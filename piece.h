@@ -1,3 +1,6 @@
+#ifndef CONNECT4_PIECE
+#define CONNECT4_PIECE
+
 enum Color
 {
     NONE,
@@ -47,3 +50,5 @@ const Piece Empty{NONE};
 const Piece Red{RED};
 const Piece Black{BLACK};
 const Piece Draw{BOTH};
+
+#endif

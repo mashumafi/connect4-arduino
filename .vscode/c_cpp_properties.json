@@ -3,13 +3,16 @@
         {
             "name": "Win32",
             "includePath": [
-                "C:\\\\Program Files\\\\WindowsApps\\\\ArduinoLLC.ArduinoIDE_1.8.21.0_x86__mdqgnx93n4wtt\\\\tools\\\\**",
-                "C:\\\\Program Files\\\\WindowsApps\\\\ArduinoLLC.ArduinoIDE_1.8.21.0_x86__mdqgnx93n4wtt\\\\hardware\\\\arduino\\\\avr\\\\**",
-                "C:\\\\Program Files\\\\WindowsApps\\\\ArduinoLLC.ArduinoIDE_1.8.21.0_x86__mdqgnx93n4wtt\\\\hardware\\\\tools\\\\avr\\\\**",
-                "C:\\\\Users\\\\MurphyMatthew\\\\Documents\\\\Arduino\\\\libraries\\\\**"
+                "C:\\Program Files\\WindowsApps\\ArduinoLLC.ArduinoIDE_1.8.21.0_x86__mdqgnx93n4wtt\\tools\\**",
+                "C:\\Program Files\\WindowsApps\\ArduinoLLC.ArduinoIDE_1.8.21.0_x86__mdqgnx93n4wtt\\hardware\\arduino\\avr\\**",
+                "C:\\Program Files\\WindowsApps\\ArduinoLLC.ArduinoIDE_1.8.21.0_x86__mdqgnx93n4wtt\\hardware\\tools\\avr\\**",
+                "C:\\Users\\MurphyMatthew\\Documents\\Arduino\\libraries\\**",
+                "/home/mashumafi/bin/arduino-1.8.9/hardware/arduino/avr/**",
+                "/home/mashumafi/bin/arduino-1.8.9/tools/**"
             ],
             "forcedInclude": [
-                "C:\\\\Program Files\\\\WindowsApps\\\\ArduinoLLC.ArduinoIDE_1.8.21.0_x86__mdqgnx93n4wtt\\\\hardware\\\\arduino\\\\avr\\\\cores\\\\arduino\\\\Arduino.h"
+                "C:\\Program Files\\WindowsApps\\ArduinoLLC.ArduinoIDE_1.8.21.0_x86__mdqgnx93n4wtt\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h",
+                "/home/mashumafi/bin/arduino-1.8.9/hardware/arduino/avr/cores/arduino/Arduino.h"
             ],
             "intelliSenseMode": "msvc-x64",
             "compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.16.27023/bin/Hostx64/x64/cl.exe",
@@ -24,6 +27,16 @@
                 "ARDUINO_AVR_UNO",
                 "ARDUINO_ARCH_AVR",
                 "USBCON"
+            ]
+        },
+        {
+            "name": "Linux",
+            "includePath": [
+                "/home/mashumafi/bin/arduino-1.8.9/tools/**",
+                "/home/mashumafi/bin/arduino-1.8.9/hardware/arduino/avr/**"
+            ],
+            "forcedInclude": [
+                "/home/mashumafi/bin/arduino-1.8.9/hardware/arduino/avr/cores/arduino/Arduino.h"
             ]
         }
     ],
