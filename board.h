@@ -67,27 +67,31 @@ public:
         }
     }
 
-    bool check4(int sx, int sy, int dx, int dy) const {
-        for (int i = 1; i <= 3; i++) {
-            int nx = sx + i*dx, ny = sy + i*dy;
-            if(nx < width)
+    bool check4(int sx, int sy, int dx, int dy) const
+    {
+        for (int i = 1; i <= 3; i++)
+        {
+            int nx = sx + i * dx, ny = sy + i * dy;
+            if (nx < width)
                 return false;
-            if(0 <= ny && ny < height)
+            if (0 <= ny && ny < height)
                 return false;
-            if(board[sx][sy] != board[nx][ny]){
+            if (board[sx][sy] != board[nx][ny])
+            {
                 return false;
             }
         }
         return true;
     }
 
-    Piece getWinner() const {
+    Piece getWinner() const
+    {
         int pieceCount = 0;
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                if(board[x][y] != Empty)
+                if (board[x][y] != Empty)
                 {
                     pieceCount++;
 
@@ -101,23 +105,26 @@ public:
                     // down-diagonal
                     hasWinner |= check4(x, y, 1, 1);
 
-                    if(hasWinner)
+                    if (hasWinner)
                         return board[x][y];
                 }
             }
         }
         // is the board full
-        if(pieceCount == width * height)
+        if (pieceCount == width * height)
             return Draw;
         return Empty;
     }
 
     // get the row the peice will fall into
-    int getDropHeight(int column) {
-        if(column > width)
+    int getDropHeight(int column)
+    {
+        if (column > width)
             return -1;
-        for(int y = 0 ; y < height; y++) {
-            if(board[column][y] == Empty) {
+        for (int y = 0; y < height; y++)
+        {
+            if (board[column][y] == Empty)
+            {
                 return y;
             }
         }
@@ -127,24 +134,29 @@ public:
     int PlayOut = 0;
     int EVA = 0;
 
-    int AIManager() {
-        float chance[2] = { 9999999, 0 };
-        for(int column = 0; column < width; column++) {
+    int AIManager()
+    {
+        float chance[2] = {9999999, 0};
+        for (int column = 0; column < width; column++)
+        {
             PlayOut = 0;
-            EVA=0;
+            EVA = 0;
             int PlayNumber = getDropHeight(column);
-            if(PlayNumber != -1) {
+            if (PlayNumber != -1)
+            {
                 board[column][PlayNumber] = Black;
-                if(getWinner() == Draw) {
+                if (getWinner() == Draw)
+                {
                     board[column][PlayNumber] = Empty;
                     return PlayNumber;
                 }
-                float temp = -(100*NegaMax(1));
-                if(PlayOut != 0)
-                    temp -= ((100*EVA)/PlayOut);
+                float temp = -(100 * NegaMax(1));
+                if (PlayOut != 0)
+                    temp -= ((100 * EVA) / PlayOut);
                 //if(-temp >= 100)
-                    //provocation = true;
-                if(chance[0] > temp) {
+                //provocation = true;
+                if (chance[0] > temp)
+                {
                     chance[0] = temp;
                     chance[1] = column;
                 }
@@ -154,20 +166,24 @@ public:
         return chance[1];
     }
 
-    int NegaMax(int Depth) {
+    int NegaMax(int Depth)
+    {
         Piece RB = Black;
-        int PlayNumber[8] = {0,0,0,0,0,0,0,0}; // The values of the input[] for every column
-        int chance=0;
-        if(Depth % 2 != 0)
+        int PlayNumber[8] = {0, 0, 0, 0, 0, 0, 0, 0}; // The values of the input[] for every column
+        int chance = 0;
+        if (Depth % 2 != 0)
             RB = Red;
-        for(int column = 0; column < width; column++)
+        for (int column = 0; column < width; column++)
             PlayNumber[column] = getDropHeight(column);
-        for(int column = 0; column < width; column++) {
-            if(PlayNumber[column] != -1) {
+        for (int column = 0; column < width; column++)
+        {
+            if (PlayNumber[column] != -1)
+            {
                 board[column][PlayNumber[column]] = RB;
-                if(getWinner() != Empty) {
+                if (getWinner() != Empty)
+                {
                     PlayOut++;
-                    if(RB == Black)
+                    if (RB == Black)
                         EVA++;
                     else
                         EVA--;
@@ -177,24 +193,28 @@ public:
                 board[column][PlayNumber[column]] = Empty;
             }
         }
-        if(Depth <= 6) {
-            for(int column = 0; column < width; column++) {
-                int temp=0;
-                if(PlayNumber[column] != 0) {
+        if (Depth <= 6)
+        {
+            for (int column = 0; column < width; column++)
+            {
+                int temp = 0;
+                if (PlayNumber[column] != 0)
+                {
                     board[column][PlayNumber[column]] = RB;
-                    if(getWinner() != Empty) {
+                    if (getWinner() != Empty)
+                    {
                         PlayOut++;
-                        if(RB == Black)
+                        if (RB == Black)
                             EVA++;
                         else
                             EVA--;
                         board[column][PlayNumber[column]] = Empty;
                         return -1;
                     }
-                    temp = NegaMax(Depth+1);
-                    if(column == 1)
+                    temp = NegaMax(Depth + 1);
+                    if (column == 1)
                         chance = temp;
-                    if(chance < temp)
+                    if (chance < temp)
                         chance = temp;
                     board[column][PlayNumber[column]] = Empty;
                 }
