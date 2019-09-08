@@ -134,7 +134,7 @@ public:
     int PlayOut = 0;
     int EVA = 0;
 
-    int AIManager()
+    int getBestMove(Piece piece)
     {
         float chance[2] = {9999999, 0};
         for (int column = 0; column < width; column++)
@@ -150,7 +150,7 @@ public:
                     board[column][PlayNumber] = Empty;
                     return PlayNumber;
                 }
-                float temp = -(100 * NegaMax(1));
+                float temp = -(100 * NegaMax(1, piece));
                 if (PlayOut != 0)
                     temp -= ((100 * EVA) / PlayOut);
                 //if(-temp >= 100)
@@ -166,7 +166,7 @@ public:
         return chance[1];
     }
 
-    int NegaMax(int Depth)
+    int NegaMax(int Depth, Piece piece)
     {
         Piece RB = Black;
         int PlayNumber[8] = {0, 0, 0, 0, 0, 0, 0, 0}; // The values of the input[] for every column
@@ -211,7 +211,7 @@ public:
                         board[column][PlayNumber[column]] = Empty;
                         return -1;
                     }
-                    temp = NegaMax(Depth + 1);
+                    temp = NegaMax(Depth + 1, piece);
                     if (column == 1)
                         chance = temp;
                     if (chance < temp)

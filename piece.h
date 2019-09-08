@@ -42,6 +42,21 @@ public:
         return color != other.color;
     }
 
+    Piece opposite() const
+    {
+        switch (color)
+        {
+        case NONE:
+            return Piece(BOTH);
+        case RED:
+            return Piece(BLACK);
+        case BLACK:
+            return Piece(RED);
+        case BOTH:
+            return Piece(NONE);
+        }
+    }
+
 private:
     Color color;
 };
