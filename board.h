@@ -10,9 +10,9 @@ class Board
 public:
     void reset()
     {
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < WIDTH; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < HEIGHT; y++)
             {
                 board[x][y] = Empty;
             }
@@ -21,46 +21,34 @@ public:
 
     int next(int selection)
     {
-        return selection % width + 1;
+        return selection % WIDTH + 1;
     }
 
     void drop(int &selection, Piece &piece)
     {
         if (selection > 0)
         {
-            int slot = selection - 1;
-            if (board[slot][0] != Empty)
+            int column = selection - 1;
+            int y = getDropHeight(column);
+            if (y == -1)
             {
-                Serial.println("Column full.");
-                return;
+                Serial.println("Column full!");
             }
-            int y = 1;
-            for (; y < height; y++)
+            else
             {
-                if (board[slot][y] != Empty)
-                {
-                    break;
-                }
+                board[column][y] = piece;
+                piece = piece.opposite();
+                selection = 0;
+                Serial.println("Dropped!");
             }
-            board[slot][y - 1] = piece;
-            if (piece == Red)
-            {
-                piece = Black;
-            }
-            else if (piece == Black)
-            {
-                piece = Red;
-            }
-            Serial.println("Dropped.");
-            selection = 0;
         }
     }
 
     void draw(byte output[8], bool showBlack) const
     {
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < WIDTH; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < HEIGHT; y++)
             {
                 bitWrite(output[y + 2], x + 1, board[x][y].draw(showBlack));
             }
@@ -72,14 +60,12 @@ public:
         for (int i = 1; i <= 3; i++)
         {
             int nx = sx + i * dx, ny = sy + i * dy;
-            if (nx < width)
+            if (WIDTH <= nx)
                 return false;
-            if (0 <= ny && ny < height)
+            if (ny < 0 || HEIGHT <= ny)
                 return false;
             if (board[sx][sy] != board[nx][ny])
-            {
                 return false;
-            }
         }
         return true;
     }
@@ -87,9 +73,9 @@ public:
     Piece getWinner() const
     {
         int pieceCount = 0;
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < WIDTH; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < HEIGHT; y++)
             {
                 if (board[x][y] != Empty)
                 {
@@ -111,7 +97,7 @@ public:
             }
         }
         // is the board full
-        if (pieceCount == width * height)
+        if (pieceCount == WIDTH * HEIGHT)
             return Draw;
         return Empty;
     }
@@ -119,32 +105,26 @@ public:
     // get the row the peice will fall into
     int getDropHeight(int column)
     {
-        if (column > width)
-            return -1;
-        for (int y = 0; y < height; y++)
-        {
-            if (board[column][y] == Empty)
-            {
-                return y;
-            }
-        }
-        return -1;
+        for (int y = 0; y < HEIGHT; y++)
+            if (board[column][y] != Empty)
+                return y - 1;
+        return HEIGHT - 1;
     }
 
     int PlayOut = 0;
     int EVA = 0;
 
-    int getBestMove(Piece piece)
+    int getBestMove(const Piece piece)
     {
         float chance[2] = {9999999, 0};
-        for (int column = 0; column < width; column++)
+        for (int column = 0; column < WIDTH; column++)
         {
             PlayOut = 0;
             EVA = 0;
             int PlayNumber = getDropHeight(column);
             if (PlayNumber != -1)
             {
-                board[column][PlayNumber] = Black;
+                board[column][PlayNumber] = piece;
                 if (getWinner() == Draw)
                 {
                     board[column][PlayNumber] = Empty;
@@ -166,16 +146,16 @@ public:
         return chance[1];
     }
 
-    int NegaMax(int Depth, Piece piece)
+    int NegaMax(int Depth, const Piece piece)
     {
-        Piece RB = Black;
+        Piece RB = piece;
         int PlayNumber[8] = {0, 0, 0, 0, 0, 0, 0, 0}; // The values of the input[] for every column
         int chance = 0;
         if (Depth % 2 != 0)
-            RB = Red;
-        for (int column = 0; column < width; column++)
+            RB = piece.opposite();
+        for (int column = 0; column < WIDTH; column++)
             PlayNumber[column] = getDropHeight(column);
-        for (int column = 0; column < width; column++)
+        for (int column = 0; column < WIDTH; column++)
         {
             if (PlayNumber[column] != -1)
             {
@@ -183,7 +163,7 @@ public:
                 if (getWinner() != Empty)
                 {
                     PlayOut++;
-                    if (RB == Black)
+                    if (RB == piece)
                         EVA++;
                     else
                         EVA--;
@@ -193,9 +173,9 @@ public:
                 board[column][PlayNumber[column]] = Empty;
             }
         }
-        if (Depth <= 6)
+        if (Depth <= 3)
         {
-            for (int column = 0; column < width; column++)
+            for (int column = 0; column < WIDTH; column++)
             {
                 int temp = 0;
                 if (PlayNumber[column] != 0)
@@ -204,7 +184,7 @@ public:
                     if (getWinner() != Empty)
                     {
                         PlayOut++;
-                        if (RB == Black)
+                        if (RB == piece)
                             EVA++;
                         else
                             EVA--;
@@ -224,9 +204,9 @@ public:
     }
 
 private:
-    static const int width = 7;
-    static const int height = 6;
-    Piece board[width][height];
+    static const int WIDTH = 7;
+    static const int HEIGHT = 6;
+    Piece board[WIDTH][HEIGHT];
 };
 
 #endif

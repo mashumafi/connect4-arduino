@@ -1,4 +1,5 @@
 #include "board.h"
+#include "timer.h"
 
 #include <Arduino.h>
 
@@ -7,18 +8,18 @@ class Game
   Board board;
   int selection;
   Piece nextPiece;
-  unsigned long blackTimer;
+  BoolTimer<300> blackTimer;
 
 public:
   Game()
   {
     reset();
+    Serial.println(board.getBestMove(Black));
   }
   void reset()
   {
     selection = 0;
     nextPiece = Red;
-    blackTimer = millis();
     board.reset();
   }
   void next()
@@ -29,18 +30,20 @@ public:
   void drop()
   {
     board.drop(selection, nextPiece);
+    Serial.println(board.getBestMove(Black));
   }
   void update()
   {
-    int diff = millis() - blackTimer;
-    if (diff >= 600)
-      blackTimer = millis();
+    Piece winner = board.getWinner();
+    if (winner != Empty)
+    {
+      reset();
+    }
+    blackTimer.update();
   }
   void draw(byte output[8]) const
   {
-    int diff = millis() - blackTimer;
-    bool showBlack = diff < 300;
-    bitWrite(output[0], selection, nextPiece.draw(showBlack));
-    board.draw(output, showBlack);
+    bitWrite(output[0], selection, nextPiece.draw(blackTimer));
+    board.draw(output, blackTimer);
   }
 };
